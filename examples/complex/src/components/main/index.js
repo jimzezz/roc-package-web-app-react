@@ -40,7 +40,12 @@ function mapDispatchToProps(dispatch) {
 }
 
 // fetch triggers on both server and client
-@provideHooks({ fetch: prefetchRepos })
+@provideHooks({
+    fetch: prefetchRepos,
+    defer: ({ dispatch }) => {
+        dispatch({ type: 'CLICKED_ASYNC' });
+    }
+})
 // mergeReposProps enriches dispatch props with reposForceFetch
 @connect(mapStateToProps, mapDispatchToProps, mergeReposProps)
 export default class Main extends React.Component {

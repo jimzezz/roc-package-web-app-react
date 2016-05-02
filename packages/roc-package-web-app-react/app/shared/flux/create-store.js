@@ -1,4 +1,4 @@
-/* globals __DEV__ __WEB__ */
+/* globals __DEV__, __WEB__, HAS_REDUX_SAGA */
 
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import { routerMiddleware, routerReducer } from 'react-router-redux';
@@ -20,9 +20,17 @@ export default function createReduxStore(reducers, ...middlewares) {
         (history, initialState) => {
             let finalCreateStore;
             const normalMiddlewares = [].concat(middlewares);
+            let sagaMiddleware;
 
             // Add the react-router-redux middleware
             normalMiddlewares.push(routerMiddleware(history));
+
+            // redux-saga
+            if (HAS_REDUX_SAGA) {
+                const reduxSaga = require('redux-saga');
+                sagaMiddleware = reduxSaga.default();
+                middlewares.push(sagaMiddleware);
+            }
 
             if (__DEV__ && __WEB__) {
                 const { persistState } = require('redux-devtools');
@@ -69,6 +77,10 @@ export default function createReduxStore(reducers, ...middlewares) {
                     });
                     store.replaceReducer(nextRootReducer);
                 });
+            }
+
+            if (sagaMiddleware) {
+                store.runSaga = sagaMiddleware.run;
             }
 
             return store;

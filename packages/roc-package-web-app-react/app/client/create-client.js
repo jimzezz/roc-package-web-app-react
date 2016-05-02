@@ -1,4 +1,4 @@
-/* global __DEV__ HAS_CLIENT_LOADING ROC_CLIENT_LOADING ROC_PATH HAS_REDUX_REDUCERS */
+/* global __DEV__, HAS_CLIENT_LOADING, ROC_CLIENT_LOADING, ROC_PATH, HAS_REDUX_REDUCERS, HAS_REDUX_SAGA, REDUX_SAGAS */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -85,6 +85,11 @@ export default function createClient({ createRoutes, createStore, mountNode }) {
             const { syncHistoryWithStore } = require('react-router-redux');
 
             const store = createStore(history, window.FLUX_STATE);
+
+            if (HAS_REDUX_SAGA) {
+                store.runSaga(require(REDUX_SAGAS).default);
+            }
+
             history = syncHistoryWithStore(history, store, {
                 // We do not want to use adjustUrlOnReplay if the browser does
                 // not support the history API with pushState since this can lead

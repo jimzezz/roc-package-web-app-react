@@ -12,7 +12,8 @@ module.exports = {
             reduxMiddlewares: 'src/middlewares.js',
             reducers: 'src/reducers.js',
             routes: 'src/routes.js',
-            templateValues: 'src/template-values.js'
+            templateValues: 'src/template-values.js',
+            sagas: 'src/sagas.js'
         }
     }
 };

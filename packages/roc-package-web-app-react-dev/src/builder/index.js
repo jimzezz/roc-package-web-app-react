@@ -81,6 +81,17 @@ export default () => ({ settings: { build: buildSettings }, previousValue: rocBu
         );
     }
 
+    const hasSagas = !!(buildSettings.sagas && fileExists(buildSettings.sagas));
+    if (hasSagas) {
+        const sagas = getAbsolutePath(buildSettings.sagas);
+
+        buildConfig.plugins.push(
+            new builder.DefinePlugin({
+                REDUX_SAGAS: JSON.stringify(sagas)
+            })
+        );
+    }
+
     const hasClientLoading = !!(buildSettings.clientLoading && fileExists(buildSettings.clientLoading));
     if (hasClientLoading) {
         const clientLoading = getAbsolutePath(buildSettings.clientLoading);
@@ -111,6 +122,7 @@ export default () => ({ settings: { build: buildSettings }, previousValue: rocBu
 
             HAS_REDUX_REDUCERS: hasReducers,
             HAS_REDUX_MIDDLEWARES: hasMiddlewares,
+            HAS_REDUX_SAGA: hasSagas,
             HAS_CLIENT_LOADING: hasClientLoading,
             HAS_TEMPLATE_VALUES: hasTemplateValues
         })

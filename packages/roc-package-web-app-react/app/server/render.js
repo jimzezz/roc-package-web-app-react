@@ -1,4 +1,4 @@
-/* global __DIST__ __DEV__ HAS_TEMPLATE_VALUES TEMPLATE_VALUES */
+/* global __DIST__, __DEV__, HAS_TEMPLATE_VALUES, TEMPLATE_VALUES, HAS_REDUX_SAGA, REDUX_SAGAS */
 
 import debug from 'debug';
 import nunjucks from 'nunjucks';
@@ -92,11 +92,24 @@ export function reactRender(url, history, store, createRoutes, renderPage, koaSt
 
                 const hooks = rocConfig.runtime.fetch.server;
 
+                let sagaPromise;
+                if (HAS_REDUX_SAGA) {
+                    sagaPromise = store.runSaga(require(REDUX_SAGAS).default).done;
+                }
+
                 triggerHooks({
                     renderProps,
                     hooks,
                     locals
-                }).then(({ redialMap, redialProps }) => {
+                }).then((result) => {
+                    if (sagaPromise) {
+                        store.dispatch(require('redux-saga').END);
+                        return sagaPromise.then(() => result);
+                    }
+
+                    return result;
+                })
+                .then(({ redialMap, redialProps }) => {
                     let component = <RedialContext {...renderProps} redialMap={ redialMap } />;
 
                     if (store) {

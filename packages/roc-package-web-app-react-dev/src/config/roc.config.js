@@ -6,6 +6,8 @@ export default {
             reducers: 'reducers.js',
             useDefaultReducers: true,
 
+            sagas: 'sagas.js',
+
             routes: 'routes.js',
             useDefaultRoutes: true,
 

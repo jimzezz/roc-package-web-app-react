@@ -17,6 +17,8 @@ export default {
                 useDefaultReduxMiddlewares: 'If Roc should use internally defined middlewares, please look at the ' +
                     ' documentation for what middlewares that are included.',
 
+                sagas: 'The Redux Saga to use as the root saga.',
+
                 clientLoading: 'The React component to use on the first client load while fetching data, will only ' +
                     'be used if some blocking hooks are defined.'
             },
@@ -57,6 +59,8 @@ export default {
 
                 reduxMiddlewares: isPath,
                 useDefaultReduxMiddlewares: isBoolean,
+
+                sagas: isPath,
 
                 clientLoading: isPath
             },
